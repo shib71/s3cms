@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/main.js"],"names":[],"mappings":"wIAGA,OAAO,CAAC,GAAG,SAAS,CAAC","file":"src/main.js","sourcesContent":["import \"aws\";\nimport \"app/components/login\";\n\nconsole.log(\"hello\");"]}

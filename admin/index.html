@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<link href="bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/sb-admin-2.css" rel="stylesheet">
+		<script data-main="js/main" src="js/lib/require.js"></script>
+
+	</head>
+	<body>
+		<span
+			id="login"
+			class="g-signin"
+			data-height="short"
+			data-callback="loginToGoogle"
+			data-cookiepolicy="single_host_origin"
+			data-requestvisibleactions="http://schemas.google.com/AddActivity"
+			data-scope="https://www.googleapis.com/auth/plus.login,https://www.googleapis.com/auth/plus.login">
+		</span>
+		<!--<script type="text/javascript">
+			var s3 = null;
+			var clientID = '952205068971-3dlk0aoc5l9mglq4qvtmr8kv70i4cccb.apps.googleusercontent.com'; // Google client ID
+			var region = 'us-east-1';
+			var awsAccountId = '313192320421';
+			var publicRoleArn = 'arn:aws:iam::313192320421:role/CMS_Public';
+			var adminRoleArn = 'arn:aws:iam::313192320421:role/CMS_Admin';
+			var identityPoolId = 'us-east-1:e4aee227-3ed8-4bde-bc92-2d81a27572be';
+
+			AWS.config.update({
+			  region: region,
+			  credentials: new AWS.CognitoIdentityCredentials({
+				 AccountId: awsAccountId, // your AWS account ID
+				 RoleArn: publicRoleArn,
+				 IdentityPoolId: identityPoolId
+			  })
+			});
+
+			document.getElementById('login').setAttribute('data-clientid', clientID);
+			function loginToGoogle(response) {
+				if (!response.error) {
+					AWS.config.credentials = new AWS.WebIdentityCredentials({
+						RoleArn: adminRoleArn, 
+						WebIdentityToken: response.id_token
+					});
+
+					AWS.config.credentials.get(function(){
+						var syncClient = new AWS.CognitoSyncManager();
+
+						syncClient.openOrCreateDataset('myDataset', function(err, dataset) {
+							dataset.put('myKey', 'myValue', function(err, record){
+								dataset.synchronize({
+									onSuccess: function(data, newRecords) {
+										 // Your handler code here
+									}
+								});
+							});
+						});
+					});
+
+					var request = gapi.client.plus.people.get({
+						'userId' : 'me'
+					});
+					request.execute(function(resp) {
+						console.log('ID: ' + resp.id);
+						console.log('Display Name: ' + resp.displayName);
+						console.log('Image URL: ' + resp.image.url);
+						console.log('Profile URL: ' + resp.url);
+
+						s3 = new AWS.S3();
+
+						console.log('You are now logged in.');
+					});
+				} else {
+					console.log('There was a problem logging you in.');
+				}
+			}
+
+			(function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/client:plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			})();
+		</script>-->
+	</body>
+</html>
