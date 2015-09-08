@@ -1,0 +1,2 @@
+define(["exports","app/store/types"],function(exports,_appStoreTypes){"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.login = login;exports.logout = logout;exports.setPreference = setPreference;function login(provider,id,name,email){return {type:_appStoreTypes.LOGIN,provider:provider,id:id,name:name,email:email};}function logout(){return {type:_appStoreTypes.LOGOUT};}function setPreference(key,value){return {type:_appStoreTypes.SETPREFERENCE,key:key,value:value};}});
+//# sourceMappingURL=actions.js.map

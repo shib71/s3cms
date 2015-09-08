@@ -19,7 +19,6 @@ module.exports = function(grunt) {
 			options: {
 				sourceMaps : true,
 				optional: [
-					"minification.deadCodeElimination",
 					"minification.constantFolding",
 					"minification.memberExpressionLiterals",
 					"minification.propertyLiterals"
@@ -36,6 +35,9 @@ module.exports = function(grunt) {
 						break;
 					case "plusone":
 						return "https://apis.google.com/js/client:plusone.js";
+						break;
+					case "redux":
+						return "lib/redux-2.0.0.min";
 						break;
 					default:
 						return source;
@@ -64,10 +66,15 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		commands : {
+			push: {
+				cmd  : 'node bin/push.js'
+			}
+		},
 		watch: {
 			js: {
 				files: ["src/**/*.js", "src/**/*.jsx"],
-				tasks: ["jshint","babel"]
+				tasks: ["jshint", "babel"]
 			},
 			css: {
 				files: ["src/less/**/*.less"],
@@ -80,7 +87,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-babel');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-commands');
 
 	// Default task(s).
-	grunt.registerTask("default", ["jshint", "babel", "less"]);
+	grunt.registerTask("default", ["jshint", "babel", "less", "commands"]);
 }
