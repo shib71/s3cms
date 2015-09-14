@@ -25,17 +25,17 @@ process.on("SIGINT", function(){
 });
 
 var s3 = new AWS.S3({
-	region: Config.awsRegion
+	region: Config.aws.region
 });
 
-s3.createBucket({ Bucket: Config.awsBucket }, function() {
+s3.createBucket({ Bucket: Config.aws.bucket }, function() {
 	uploadFiles(["admin/", "s3cms_project/"], s3);
 });
 
 function listAllObjects(path, s3, add){
 	var request = s3.listObjects({ 
 		Prefix: path, 
-		Bucket: Config.awsBucket 
+		Bucket: Config.aws.bucket 
 	});
 	var count = 0;
 
@@ -62,12 +62,12 @@ function s3HashFetcher(paths, s3) {
 	return scatterResolve(paths, function(resolveKey, rejectKey, done){
 		return Promise.all(paths.map(function(path){
 			return listAllObjects(path, s3, function(item){
-				resolveKey(item.Key, item.ETag);
-			}).catch(function(err){
+				resolveKey(item.Key, item.ETag.slice(1, -1));
+			}).then(function(){
+				done(path);
+			}, function(err){
 				done(path, err);
-
-				return "done";
-			});
+			}).return("done");
 		}));
 	});
 }
@@ -106,15 +106,15 @@ function scatterResolve(groups, fn) {
 	}
 
 	function done(group, err) {
-		if (typeof(group) !== "string" && group.constructor !== Array && typeof(err) === "undefined"){
-			err = group;
-			group = groups.filter(function(group){ return group in resolvers; });
-		}
 		if (typeof("group") === "string"){
 			group = [group];
 		}
-		if (typeof(err) === "undefined"){
-			err = NotExistError();
+		if (err === undefined && group.constructor !== Array){
+			err = group;
+			group = groups.filter(function(group){ return resolvers[group] !== undefined; });
+		}
+		if (err === undefined){
+			err = new NotExistError();
 		}
 
 		group.forEach(function(thisgroup){
@@ -164,7 +164,7 @@ function scatterResolve(groups, fn) {
 	}
 
 	fn(resolve, reject, done).then(function(){
-		done(NotExistError());
+		done();
 	}).catch(function(err){
 		done(err);
 	});
@@ -199,7 +199,10 @@ File.prototype.hashFile = function() {
 	}).bind(this);
 }
 File.prototype.changed = function(){
-	return Promise.all([ this.hashFetcher(this.key), this.hashFile() ]).spread(function(remoteHash, localHash){
+	return Promise.all([ 
+		this.hashFetcher(this.key).catch(NotExistError, function(){ return ""; }), 
+		this.hashFile() 
+	]).bind(this).spread(function(remoteHash, localHash){
 		return remoteHash !== localHash;
 	}).bind(this);
 }
@@ -207,7 +210,7 @@ File.prototype.getParams = function(config){
 	var base = this.key.split(/[\/\\]/)[0];
 
 	return { 
-		Bucket: Config.awsBucket, 
+		Bucket: Config.aws.bucket, 
 		Key: this.key, 
 		Body: fs.createReadStream(this.path),
 		ACL: base === "admin" || this.key === "s3cms_project/config.js" ? "public-read" : "private",
@@ -217,14 +220,14 @@ File.prototype.getParams = function(config){
 File.prototype.upload = function(s3){
 	return this.stat().call("isDirectory").then(function(isDirectory){
 		if (isDirectory)
-			return this.uploadDirectory();
+			return this.uploadDirectory(s3);
 		else
-			return this.uploadFile();
+			return this.uploadFile(s3);
 	});
 }
 File.prototype.uploadDirectory = function(s3){
 	this.list().map(function(file){
-		return file.upload();
+		return file.upload(s3);
 	}).settle();
 }
 File.prototype.uploadFile = function(s3){
@@ -263,7 +266,7 @@ function uploadFiles(paths, s3){
 
 	return Promise.resolve(paths).map(function(thispath){
 		var f = new File(basePath, path.relative(basePath, thispath), hashFetcher);
-		return f.upload();
+		return f.upload(s3);
 	}).settle();
 }
 

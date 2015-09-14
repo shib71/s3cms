@@ -1,18 +1,31 @@
 {
   "name": "s3cms",
   "version": "0.0.0",
-  "description": "",
+  "description": "CMS that runs on S3 and in the browser using the AWS JavaScript SDK",
   "author": "Blair McKenzie",
   "license": "COMMERCIAL",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shib71/s3cmms.git"
+  },
   "devDependencies": {
+    "aws-sdk": "^2.2.0",
+    "babel-core": "^5.8.24",
     "bluebird": "^2.9.34",
     "grunt": "^0.4.5",
     "grunt-babel": "^5.0.1",
     "grunt-commands": "^0.1.8",
+    "grunt-contrib-copy": "^0.8.1",
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-contrib-less": "^1.0.1",
     "grunt-contrib-uglify": "^0.9.2",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "react": "^0.13.3",
+    "react-redux": "^2.1.1",
+    "redux": "^2.0.0",
+    "redux-thunk": "git://github.com/gaearon/redux-thunk.git#ee4f739",
+    "requirejs": "^2.1.20",
+    "reqwest": "^2.0.3"
   },
   "dependencies": {
     "aws-sdk": "^2.1.50",

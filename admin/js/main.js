@@ -1,8 +1,4 @@
-define(["exports","lib/aws-sdk-2.1.49.min","app/store"],function(exports,_libAwsSdk2149Min,_appStore){"use strict"; /*
-var unsubscribe = subscribe(function(){
-	console.log(getState());
-});
-*/(0,_appStore.boundSetPreference)("abc",123);(0,_appStore.boundSetPreference)("def",890);(0,_appStore.boundSetPreference)("abc","hello");(0,_appStore.boundSetPreference)("qwerty",123); /*
-unsubscribe();
-*/});
+define(['exports','react','app/components/root','app/store'],function(exports,_react,_appComponentsRoot,_appStore){'use strict';function _interopRequireDefault(obj){return obj && obj.__esModule?obj:{'default':obj};}var _React=_interopRequireDefault(_react);var _Root=_interopRequireDefault(_appComponentsRoot);_React['default'].render( // The child must be wrapped in a function
+// to work around an issue in React 0.13.
+_React['default'].createElement(_Root['default'],null),document.body);});
 //# sourceMappingURL=main.js.map

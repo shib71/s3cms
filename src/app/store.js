@@ -1,17 +1,16 @@
-import { createStore } from 'redux';
-import { login, logout, setPreference } from "app/store/actions";
+import { createStore, bindActionCreators, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import * as ActionCreators from "app/store/actions";
 import Reducer from "app/store/reducers";
-console.log(Reducer);
-var store = createStore(Reducer);
+import Config from "/s3cms_project/config.js";
 
-function bindAction(fn){
-	return function() {
-		return store.dispatch(fn.apply(null, arguments));
-	}
-}
+const createStoreWithMiddleware = applyMiddleware(
+  thunkMiddleware // lets us dispatch() functions
+)(createStore);
 
-export var boundLogin = bindAction(login);
-export var boundLogout = bindAction(logout);
-export var boundSetPreference = bindAction(setPreference);
-export var subscribe = store.subscribe.bind(store);
-export var getState = store.getState.bind(store);
+export const store = createStoreWithMiddleware(Reducer, { 
+	preferences : {},
+	profile : {},
+	config : Config
+});
+export const actions = bindActionCreators(ActionCreators, store.dispatch);

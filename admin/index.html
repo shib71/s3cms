@@ -2,82 +2,63 @@
 	<head>
 		<link href="bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/sb-admin-2.css" rel="stylesheet">
+		<script>
+			var require = {
+				paths : {
+					"react" : "/admin/js/lib/react",
+					"redux" : "/admin/js/lib/redux"
+				},
+				bundles : {
+					"react" : ["react", "react/addons"]
+				}
+			};
+		</script>
 		<script data-main="js/main" src="js/lib/require.js"></script>
-
+		<script>
+			requirejs.onError = function(err){
+				refreshLoadingMessage(err.toString());
+				console.log(err.originalError);
+			}
+		</script>
 	</head>
 	<body>
-		<span
-			id="login"
-			class="g-signin"
-			data-height="short"
-			data-callback="loginToGoogle"
-			data-cookiepolicy="single_host_origin"
-			data-requestvisibleactions="http://schemas.google.com/AddActivity"
-			data-scope="https://www.googleapis.com/auth/plus.login,https://www.googleapis.com/auth/plus.login">
-		</span>
-		<!--<script type="text/javascript">
-			var s3 = null;
-			var clientID = '952205068971-3dlk0aoc5l9mglq4qvtmr8kv70i4cccb.apps.googleusercontent.com'; // Google client ID
-			var region = 'us-east-1';
-			var awsAccountId = '313192320421';
-			var publicRoleArn = 'arn:aws:iam::313192320421:role/CMS_Public';
-			var adminRoleArn = 'arn:aws:iam::313192320421:role/CMS_Admin';
-			var identityPoolId = 'us-east-1:e4aee227-3ed8-4bde-bc92-2d81a27572be';
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4">
+					<div class="login-panel panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Loading</h3>
+						</div>
+						<div class="panel-body">
+							<div class="alert alert-warning">
+								<span id="loading-message">Speculating Stock Market Indices</span>
+								<span>...</span>
+							</div>
+							<script>
+								loadingMessageID = 0;
+								function refreshLoadingMessage(error){
+									var loadingMessages = [ "Adding Hidden Agendas", "Adjusting Bell Curves", "Aesthesizing Industrial Areas", "Aligning Covariance Matrices", "Applying Feng Shui Shaders", "Applying Theatre Soda Layer", "Asserting Packed Exemplars", "Attempting to Lock Back-Buffer", "Binding Sapling Root System", "Breeding Fauna", "Building Data Trees", "Bureacritizing Bureaucracies", "Calculating Inverse Probability Matrices", "Calculating Llama Expectoration Trajectory", "Calibrating Blue Skies", "Charging Ozone Layer", "Coalescing Cloud Formations", "Cohorting Exemplars", "Collecting Meteor Particles", "Compounding Inert Tessellations", "Compressing Fish Files", "Computing Optimal Bin Packing", "Concatenating Sub-Contractors", "Containing Existential Buffer", "Debarking Ark Ramp", "Debunching Unionized Commercial Services", "Deciding What Message to Display Next", "Decomposing Singular Values", "Decrementing Tectonic Plates", "Deleting Ferry Routes", "Depixelating Inner Mountain Surface Back Faces", "Depositing Slush Funds", "Destabilizing Economic Indicators", "Determining Width of Blast Fronts", "Deunionizing Bulldozers", "Dicing Models", "Diluting Livestock Nutrition Variables", "Downloading Satellite Terrain Data", "Exposing Flash Variables to Streak System", "Extracting Resources", "Factoring Pay Scale", "Fixing Election Outcome Matrix", "Flood-Filling Ground Water", "Flushing Pipe Network", "Gathering Particle Sources", "Generating Jobs", "Gesticulating Mimes", "Graphing Whale Migration", "Hiding Willio Webnet Mask", "Implementing Impeachment Routine", "Increasing Accuracy of RCI Simulators", "Increasing Magmafacation", "Initializing My Sim Tracking Mechanism", "Initializing Rhinoceros Breeding Timetable", "Initializing Robotic Click-Path AI", "Inserting Sublimated Messages", "Integrating Curves", "Integrating Illumination Form Factors", "Integrating Population Graphs", "Iterating Cellular Automata", "Lecturing Errant Subsystems", "Mixing Genetic Pool", "Modeling Object Components", "Mopping Occupant Leaks", "Normalizing Power", "Obfuscating Quigley Matrix", "Overconstraining Dirty Industry Calculations", "Partitioning City Grid Singularities", "Perturbing Matrices", "Pixalating Nude Patch", "Polishing Water Highlights", "Populating Lot Templates", "Preparing Sprites for Random Walks", "Prioritizing Landmarks", "Projecting Law Enforcement Pastry Intake", "Realigning Alternate Time Frames", "Reconfiguring User Mental Processes", "Relaxing Splines", "Removing Road Network Speed Bumps", "Removing Texture Gradients", "Removing Vehicle Avoidance Behavior", "Resolving GUID Conflict", "Reticulating Splines", "Retracting Phong Shader", "Retrieving from Back Store", "Reverse Engineering Image Consultant", "Routing Neural Network Infanstructure", "Scattering Rhino Food Sources", "Scrubbing Terrain", "Searching for Llamas", "Seeding Architecture Simulation Parameters", "Sequencing Particles", "Setting Advisor Moods", "Setting Inner Deity Indicators", "Setting Universal Physical Constants", "Sonically Enhancing Occupant-Free Timber", "Speculating Stock Market Indices", "Splatting Transforms", "Stratifying Ground Layers", "Sub-Sampling Water Data", "Synthesizing Gravity", "Synthesizing Wavelets", "Time-Compressing Simulator Clock", "Unable to Reveal Current Activity", "Weathering Buildings", "Zeroing Crime Network" ];
+									var messageEl = document.getElementById("loading-message");
 
-			AWS.config.update({
-			  region: region,
-			  credentials: new AWS.CognitoIdentityCredentials({
-				 AccountId: awsAccountId, // your AWS account ID
-				 RoleArn: publicRoleArn,
-				 IdentityPoolId: identityPoolId
-			  })
-			});
+									clearTimeout(loadingMessageID);
 
-			document.getElementById('login').setAttribute('data-clientid', clientID);
-			function loginToGoogle(response) {
-				if (!response.error) {
-					AWS.config.credentials = new AWS.WebIdentityCredentials({
-						RoleArn: adminRoleArn, 
-						WebIdentityToken: response.id_token
-					});
-
-					AWS.config.credentials.get(function(){
-						var syncClient = new AWS.CognitoSyncManager();
-
-						syncClient.openOrCreateDataset('myDataset', function(err, dataset) {
-							dataset.put('myKey', 'myValue', function(err, record){
-								dataset.synchronize({
-									onSuccess: function(data, newRecords) {
-										 // Your handler code here
+									if (messageEl){
+										if (error){
+											document.getElementById("loading-message").parentNode.className = "alert alert-danger";
+											document.getElementById("loading-message").textContent = error.toString();
+										}
+										else {
+											document.getElementById("loading-message").textContent = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+											loadingMessageID = setTimeout(refreshLoadingMessage, 500);
+										}
 									}
-								});
-							});
-						});
-					});
-
-					var request = gapi.client.plus.people.get({
-						'userId' : 'me'
-					});
-					request.execute(function(resp) {
-						console.log('ID: ' + resp.id);
-						console.log('Display Name: ' + resp.displayName);
-						console.log('Image URL: ' + resp.image.url);
-						console.log('Profile URL: ' + resp.url);
-
-						s3 = new AWS.S3();
-
-						console.log('You are now logged in.');
-					});
-				} else {
-					console.log('There was a problem logging you in.');
-				}
-			}
-
-			(function() {
-				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-				po.src = 'https://apis.google.com/js/client:plusone.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-			})();
-		</script>-->
+								}
+								refreshLoadingMessage();
+							</script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
