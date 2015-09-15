@@ -1,0 +1,23 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::blairs.sandbox",
+                "arn:aws:s3:::blairs.sandbox/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "cognito-identity.amazonaws.com:aud": "{identityPoolId}",
+                    "cognito-identity.amazonaws.com:sub": [
+                        "us-east-1:00000000-0000-0000-0000-000000000000"
+                    ]
+                }
+            }
+        }
+    ]
+}
